@@ -3,7 +3,7 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools">
     <item
-        android:id="@+id/btnCompose"
+        android:id="@+id/itemCompose"
         android:icon="@drawable/ic_action_compose"
         app:showAsAction="always"
         android:title="@string/compose"/>

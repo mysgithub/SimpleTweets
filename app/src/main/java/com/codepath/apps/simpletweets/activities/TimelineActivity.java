@@ -7,7 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.codepath.apps.simpletweets.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.simpletweets.R;
@@ -56,8 +58,22 @@ public class TimelineActivity extends AppCompatActivity {
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater = getMenuInflater();
     inflater.inflate(R.menu.menu_timeline, menu);
-
     return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    // Handle action bar item clicks here. The action bar will
+    // automatically handle clicks on the Home/Up button, so long
+    // as you specify a parent activity in AndroidManifest.xml.
+    int id = item.getItemId();
+    switch (id){
+      case R.id.itemCompose:
+        Toast.makeText(getApplicationContext(), "clicked on menu", Toast.LENGTH_SHORT).show();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
   }
 
   private void populateTimeline(){
