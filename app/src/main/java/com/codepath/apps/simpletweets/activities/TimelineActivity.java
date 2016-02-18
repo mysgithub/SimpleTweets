@@ -10,9 +10,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.codepath.apps.simpletweets.EndlessRecyclerViewScrollListener;
+import com.codepath.apps.simpletweets.OnTweetPostListener;
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.TwitterApplication;
 import com.codepath.apps.simpletweets.TwitterClient;
@@ -30,7 +30,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends AppCompatActivity implements OnTweetPostListener {
 
   private TwitterClient client;
   private ArrayList<Tweet> tweets;
@@ -70,7 +70,6 @@ public class TimelineActivity extends AppCompatActivity {
     int id = item.getItemId();
     switch (id){
       case R.id.itemCompose:
-        Toast.makeText(getApplicationContext(), "clicked on menu", Toast.LENGTH_SHORT).show();
         showComposeTweetDialog();
         return true;
       default:
@@ -137,4 +136,11 @@ public class TimelineActivity extends AppCompatActivity {
     dialog.show(fragmentManager, "compose");
   }
 
+  @Override
+  public void onTweetPost(Tweet tweet) {
+    // Add Tweet in the beginning of list
+    tweets.add(0, tweet);
+    tweetsRecyclerViewAdapter.notifyItemInserted(0);
+
+  }
 }
