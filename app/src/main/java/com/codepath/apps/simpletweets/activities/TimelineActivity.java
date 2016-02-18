@@ -2,13 +2,16 @@ package com.codepath.apps.simpletweets.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ListView;
 
+import com.codepath.apps.simpletweets.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.TwitterApplication;
 import com.codepath.apps.simpletweets.TwitterClient;
-import com.codepath.apps.simpletweets.adapters.TweetsArrayAdapter;
+import com.codepath.apps.simpletweets.adapters.TweetsRecyclerViewAdapter;
 import com.codepath.apps.simpletweets.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -18,31 +21,60 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 
 public class TimelineActivity extends AppCompatActivity {
 
   private TwitterClient client;
   private ArrayList<Tweet> tweets;
-  private TweetsArrayAdapter aTweets;
-  private ListView lvTweets;
+  private TweetsRecyclerViewAdapter tweetsRecyclerViewAdapter;
+  private long maxId;
+
+  @Bind(R.id.lvTweets) ListView lvTweets;
+  @Bind(R.id.rvTweets) RecyclerView rvTweets;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_timeline);
 
-    lvTweets = (ListView) findViewById(R.id.lvTweets);
-    tweets = new ArrayList<>();
-    aTweets = new TweetsArrayAdapter(this, tweets);
-    lvTweets.setAdapter(aTweets);
+    ButterKnife.bind(this);
+
+    // Setup RecyclerView
+    setupRecyclerView();
+
     // Get client
     client = TwitterApplication.getRestClient();
     populateTimeline();
   }
 
   private void populateTimeline(){
-    client.getHomeTimeline(new JsonHttpResponseHandler(){
 
+    client.getHomeTimeline(getResponseHandler(), 0);
+  }
+
+  private void setupRecyclerView(){
+    tweets = new ArrayList<>();
+    tweetsRecyclerViewAdapter = new TweetsRecyclerViewAdapter(tweets, this);
+    //lvTweets.setAdapter(tweetsArrayAdapter);
+    rvTweets.setAdapter(tweetsRecyclerViewAdapter);
+
+    LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+    rvTweets.setLayoutManager(layoutManager);
+
+    rvTweets.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
+      @Override
+      public void onLoadMore(int page, int totalItemsCount) {
+        long maxId = tweets.get(tweets.size() - 1).getUid() - 1; // -1 so that duplicate will not appear..
+        client.getHomeTimeline(getResponseHandler(), maxId);
+      }
+    });
+  }
+
+  private JsonHttpResponseHandler getResponseHandler(){
+    return new JsonHttpResponseHandler(){
       @Override
       public void onStart() {
         Log.d("DEBUG", "Request: " + super.getRequestURI().toString());
@@ -50,8 +82,16 @@ public class TimelineActivity extends AppCompatActivity {
 
       @Override
       public void onSuccess(int statusCode, Header[] headers, JSONArray jsonArray) {
-        Log.d("DEBUG", jsonArray.toString());
-        aTweets.addAll(Tweet.fromJSONArray(jsonArray));
+        Log.d("DEBUG", "Resposne: " + jsonArray.toString());
+        int curSize = tweetsRecyclerViewAdapter.getItemCount();
+        ArrayList<Tweet> arrayList = Tweet.fromJSONArray(jsonArray);
+        tweets.addAll(arrayList);
+
+        Log.d("DEBUG", "curSize: " + curSize);
+        Log.d("DEBUG", "tweets.size: " + tweets.size());
+        Log.d("DEBUG", "arrayList.size: " + arrayList.size());
+
+        tweetsRecyclerViewAdapter.notifyItemRangeInserted(curSize, arrayList.size());
       }
 
       @Override
@@ -60,7 +100,7 @@ public class TimelineActivity extends AppCompatActivity {
         Log.d("Error : ", "" + throwable);
         Log.d("Exception:", errorResponse.toString());
       }
-
-    });
+    };
   }
+
 }

@@ -20,7 +20,6 @@ import java.util.List;
 public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
 
 
-
   public TweetsArrayAdapter(Context context, List<Tweet> tweets){
     super(context, android.R.layout.simple_list_item_1, tweets);
   }
@@ -36,15 +35,18 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
       convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_tweet, parent, false);
     }
     // 3. Find subview
+    // Make this ButterKnife
     ImageView ivProfileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
     TextView tvUserName = (TextView) convertView.findViewById(R.id.tvUserName);
     TextView tvBody = (TextView) convertView.findViewById(R.id.tvBody);
+    TextView tvTime = (TextView) convertView.findViewById(R.id.tvTime);
 
     // 4. Populate
     tvUserName.setText(tweet.getUser().getScreenName());
     tvBody.setText(tweet.getBody());
     ivProfileImage.setImageResource(android.R.color.transparent); // clear out old image for recycled view
     Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl()).into(ivProfileImage);
+    tvTime.setText(tweet.getCreatedAt());
 
     return convertView;
   }

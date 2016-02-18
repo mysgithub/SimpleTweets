@@ -1,11 +1,12 @@
-package com.codepath.apps.simpletweets;
+package com.codepath.apps.simpletweets.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
-import com.codepath.apps.simpletweets.activities.TimelineActivity;
+import com.codepath.apps.simpletweets.R;
+import com.codepath.apps.simpletweets.TwitterClient;
 import com.codepath.oauth.OAuthLoginActionBarActivity;
 
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
