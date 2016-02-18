@@ -1,6 +1,7 @@
 package com.codepath.apps.simpletweets.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -70,6 +71,7 @@ public class TimelineActivity extends AppCompatActivity {
     switch (id){
       case R.id.itemCompose:
         Toast.makeText(getApplicationContext(), "clicked on menu", Toast.LENGTH_SHORT).show();
+        showComposeTweetDialog();
         return true;
       default:
         return super.onOptionsItemSelected(item);
@@ -126,6 +128,13 @@ public class TimelineActivity extends AppCompatActivity {
         Log.d("Exception:", errorResponse.toString());
       }
     };
+  }
+
+  public void showComposeTweetDialog(){
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    ComposeTweetDialog dialog = ComposeTweetDialog.newInstance();
+
+    dialog.show(fragmentManager, "compose");
   }
 
 }
