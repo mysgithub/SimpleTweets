@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.widget.ListView;
 
 import com.codepath.apps.simpletweets.EndlessRecyclerViewScrollListener;
@@ -50,8 +52,15 @@ public class TimelineActivity extends AppCompatActivity {
     populateTimeline();
   }
 
-  private void populateTimeline(){
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.menu_timeline, menu);
 
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  private void populateTimeline(){
     client.getHomeTimeline(getResponseHandler(), 0);
   }
 
