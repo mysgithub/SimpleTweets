@@ -2,6 +2,7 @@ package com.codepath.apps.simpletweets.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,7 +11,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ListView;
 
 import com.codepath.apps.simpletweets.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.simpletweets.OnTweetPostListener;
@@ -38,8 +38,8 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
   private TweetsRecyclerViewAdapter tweetsRecyclerViewAdapter;
   private long maxId;
 
-  @Bind(R.id.lvTweets) ListView lvTweets;
   @Bind(R.id.rvTweets) RecyclerView rvTweets;
+  @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +53,9 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
 
     // Setup RecyclerView
     setupRecyclerView();
+
+    // Setup refresh listener which triggers new data loading
+    swipeContainer.setOnRefreshListener(mRefreshListener);
 
     // Get client
     client = TwitterApplication.getRestClient();
@@ -82,7 +85,7 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
   }
 
   private void populateTimeline(){
-    client.getHomeTimeline(getResponseHandler(), 0);
+    client.getHomeTimeline(mJsonHttpResponseHandler, 0);
   }
 
   private void setupRecyclerView(){
@@ -98,40 +101,11 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
       @Override
       public void onLoadMore(int page, int totalItemsCount) {
         long maxId = tweets.get(tweets.size() - 1).getUid() - 1; // -1 so that duplicate will not appear..
-        client.getHomeTimeline(getResponseHandler(), maxId);
+        client.getHomeTimeline(mJsonHttpResponseHandler, maxId);
       }
     });
   }
 
-  private JsonHttpResponseHandler getResponseHandler(){
-    return new JsonHttpResponseHandler(){
-      @Override
-      public void onStart() {
-        Log.d("DEBUG", "Request: " + super.getRequestURI().toString());
-      }
-
-      @Override
-      public void onSuccess(int statusCode, Header[] headers, JSONArray jsonArray) {
-        Log.d("DEBUG", "Resposne: " + jsonArray.toString());
-        int curSize = tweetsRecyclerViewAdapter.getItemCount();
-        ArrayList<Tweet> arrayList = Tweet.fromJSONArray(jsonArray);
-        tweets.addAll(arrayList);
-
-        Log.d("DEBUG", "curSize: " + curSize);
-        Log.d("DEBUG", "tweets.size: " + tweets.size());
-        Log.d("DEBUG", "arrayList.size: " + arrayList.size());
-
-        tweetsRecyclerViewAdapter.notifyItemRangeInserted(curSize, arrayList.size());
-      }
-
-      @Override
-      public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-        Log.d("Failed2: ", "" + statusCode);
-        Log.d("Error : ", "" + throwable);
-        Log.d("Exception:", errorResponse.toString());
-      }
-    };
-  }
 
   public void showComposeTweetDialog(){
     FragmentManager fragmentManager = getSupportFragmentManager();
@@ -155,6 +129,54 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
     // Add Tweet in the beginning of list
     tweets.add(0, tweet);
     tweetsRecyclerViewAdapter.notifyItemInserted(0);
-
   }
+
+  private final SwipeRefreshLayout.OnRefreshListener mRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+    @Override
+    public void onRefresh() {
+      // Clear Old Items
+      tweetsRecyclerViewAdapter.clear();
+      // Get New
+      client.getHomeTimeline(mJsonHttpResponseHandler, 0);
+    }
+  };
+
+  private final JsonHttpResponseHandler mJsonHttpResponseHandler = new JsonHttpResponseHandler(){
+    @Override
+    public void onStart() {
+      Log.d("DEBUG", "Request: " + super.getRequestURI().toString());
+    }
+
+    @Override
+    public void onFinish() {
+      super.onFinish();
+      //Progress Bar
+      // Swipe Refreshing
+      swipeContainer.setRefreshing(false);
+    }
+
+    @Override
+    public void onSuccess(int statusCode, Header[] headers, JSONArray jsonArray) {
+      Log.d("DEBUG", "Resposne: " + jsonArray.toString());
+
+      int curSize = tweetsRecyclerViewAdapter.getItemCount();
+      ArrayList<Tweet> arrayList = Tweet.fromJSONArray(jsonArray);
+      tweets.addAll(arrayList);
+
+      Log.d("DEBUG", "curSize: " + curSize);
+      Log.d("DEBUG", "tweets.size: " + tweets.size());
+      Log.d("DEBUG", "arrayList.size: " + arrayList.size());
+
+      tweetsRecyclerViewAdapter.notifyItemRangeInserted(curSize, arrayList.size());
+    }
+
+    @Override
+    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+      Log.d("Failed2: ", "" + statusCode);
+      Log.d("Error : ", "" + throwable);
+      Log.d("Exception:", errorResponse.toString());
+    }
+  };
+
 }
+

@@ -74,6 +74,11 @@ public class TweetsRecyclerViewAdapter extends RecyclerView.Adapter<TweetsRecycl
       super(itemView);
       ButterKnife.bind(this, itemView);
     }
+  }
 
+  public void clear() {
+    final int size = getItemCount();
+    mTweets.clear();
+    notifyItemRangeRemoved(0, size);
   }
 }
