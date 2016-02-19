@@ -3,8 +3,9 @@
 
     <string name="app_name">Simple Tweets</string>
     <string name="login_label">Connect to Twitter</string>
-    <string name="title_activity_timeline">Home Timeline</string>
+    <string name="title_activity_timeline">twitter</string>
     <string name="cancel">Cancel</string>
     <string name="compose">Compose</string>
+    <string name="char_count">140</string>
 
 </resources>

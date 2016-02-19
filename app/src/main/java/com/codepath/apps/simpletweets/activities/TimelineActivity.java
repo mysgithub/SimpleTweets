@@ -2,6 +2,7 @@ package com.codepath.apps.simpletweets.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,6 +47,9 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
     setContentView(R.layout.activity_timeline);
 
     ButterKnife.bind(this);
+
+    // Change ActionBar Icon
+    showTwitterIcon();
 
     // Setup RecyclerView
     setupRecyclerView();
@@ -134,6 +138,16 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
     ComposeTweetDialog dialog = ComposeTweetDialog.newInstance();
 
     dialog.show(fragmentManager, "compose");
+  }
+
+  public void showTwitterIcon(){
+    ActionBar actionBar = getSupportActionBar();
+    if(actionBar != null){
+      actionBar.setDisplayShowHomeEnabled(true);
+      actionBar.setLogo(R.drawable.ic_twitter);
+      actionBar.setDisplayUseLogoEnabled(true);
+    }
+
   }
 
   @Override
