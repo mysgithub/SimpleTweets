@@ -1,5 +1,6 @@
 package com.codepath.apps.simpletweets.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.codepath.apps.simpletweets.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.simpletweets.OnTweetPostListener;
@@ -19,6 +21,7 @@ import com.codepath.apps.simpletweets.TwitterApplication;
 import com.codepath.apps.simpletweets.TwitterClient;
 import com.codepath.apps.simpletweets.adapters.TweetsRecyclerViewAdapter;
 import com.codepath.apps.simpletweets.models.Tweet;
+import com.codepath.apps.simpletweets.utils.ItemClickSupport;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
@@ -39,6 +42,7 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
   private ArrayList<Tweet> tweets;
   private TweetsRecyclerViewAdapter tweetsRecyclerViewAdapter;
 
+
   @Bind(R.id.rvTweets) RecyclerView rvTweets;
   @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
 
@@ -55,6 +59,9 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
     // Setup RecyclerView
     setupRecyclerView();
 
+    // Item click Listener
+    ItemClickSupport.addTo(rvTweets).setOnItemClickListener(mItemClickListener);
+
     // Setup refresh listener which triggers new data loading
     swipeContainer.setOnRefreshListener(mRefreshListener);
     // Configure the refreshing colors
@@ -68,6 +75,7 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
 
     // Populate TimeLine
     populateTimeline();
+
   }
 
   @Override
@@ -155,7 +163,6 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
       actionBar.setLogo(R.drawable.ic_twitter);
       actionBar.setDisplayUseLogoEnabled(true);
     }
-
   }
 
   @Override
@@ -227,6 +234,17 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
       Log.d("Failed2: ", "" + statusCode);
       Log.d("Error : ", "" + throwable);
       Log.d("Exception:", errorResponse.toString());
+    }
+  };
+  private final ItemClickSupport.OnItemClickListener mItemClickListener = new ItemClickSupport.OnItemClickListener() {
+    @Override
+    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+      Tweet tweet = tweets.get(position);
+
+      Intent i = new Intent(getApplicationContext(), TweetDetailActivity.class);
+      i.putExtra("tweet", tweet);
+      startActivity(i);
     }
   };
 

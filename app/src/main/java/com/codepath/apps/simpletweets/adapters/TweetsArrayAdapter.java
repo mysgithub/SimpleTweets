@@ -24,7 +24,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
     super(context, android.R.layout.simple_list_item_1, tweets);
   }
 
-  // Must Use ViewHolder
+  // Must Use TimelineViewHolder
 
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {

@@ -7,13 +7,14 @@ import com.activeandroid.annotation.Table;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Shyam Rokde on 2/16/16.
  */
 @Table(name = "users")
-public class User extends Model{
+public class User extends Model implements Serializable{
   @Column(name = "name")
   private String name;
   @Column(name = "uid")

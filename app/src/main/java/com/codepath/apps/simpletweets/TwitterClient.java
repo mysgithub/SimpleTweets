@@ -67,6 +67,14 @@ public class TwitterClient extends OAuthBaseClient {
 		getClient().post(apiUrl, params, handler);
 	}
 
+	public void getTweet(AsyncHttpResponseHandler handler, long tweetId){
+		String apiUrl = getApiUrl("statuses/show.json");
+		RequestParams params = new RequestParams();
+		params.put("id", tweetId);
+
+		getClient().get(apiUrl, params, handler);
+	}
+
 
 	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
 	 * 	  i.e getApiUrl("statuses/home_timeline.json");

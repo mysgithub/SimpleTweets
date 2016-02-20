@@ -19,6 +19,7 @@ import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.TwitterApplication;
 import com.codepath.apps.simpletweets.TwitterClient;
 import com.codepath.apps.simpletweets.models.Tweet;
+import com.codepath.apps.simpletweets.utils.TwitterUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
@@ -39,7 +40,6 @@ public class ComposeTweetDialog extends DialogFragment {
   private TwitterClient client;
   private OnTweetPostListener tweetPostListener;
 
-  final static int TWEET_MAX_ALLOWED_CHAR = 140;
 
   public ComposeTweetDialog(){}
 
@@ -53,7 +53,7 @@ public class ComposeTweetDialog extends DialogFragment {
 
     // Add TextWatcher
     etTweet.addTextChangedListener(mTextWatcher);
-    tvCharCount.setText(String.valueOf(TWEET_MAX_ALLOWED_CHAR));
+    tvCharCount.setText(String.valueOf(TwitterUtil.TWEET_MAX_ALLOWED_CHAR));
 
     return view;
   }
@@ -118,7 +118,7 @@ public class ComposeTweetDialog extends DialogFragment {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-      int remainingCharCount = TWEET_MAX_ALLOWED_CHAR - s.length();
+      int remainingCharCount = TwitterUtil.TWEET_MAX_ALLOWED_CHAR - s.length();
       tvCharCount.setText(String.valueOf(remainingCharCount));
     }
 

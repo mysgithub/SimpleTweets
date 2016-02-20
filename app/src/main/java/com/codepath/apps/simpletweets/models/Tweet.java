@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.Locale;
  * Created by Shyam Rokde on 2/16/16.
  */
 @Table(name = "tweets")
-public class Tweet extends Model{
+public class Tweet extends Model implements Serializable {
 
   @Column(name = "body")
   private String body;
