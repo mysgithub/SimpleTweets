@@ -1,16 +1,43 @@
 package com.codepath.apps.simpletweets.models;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 /**
  * Created by Shyam Rokde on 2/16/16.
  */
-public class User {
+@Table(name = "users")
+public class User extends Model{
+  @Column(name = "name")
   private String name;
+  @Column(name = "uid")
   private long uid;
+  @Column(name = "screenName")
   private String screenName;
+  @Column(name = "profileImageUrl")
   private String profileImageUrl;
+
+  public User(){
+    super();
+  }
+
+  public User(JSONObject jsonObject){
+    super();
+    try {
+      this.uid = jsonObject.getLong("id");
+      this.name = jsonObject.getString("name");
+      this.screenName = jsonObject.getString("screen_name");
+      this.profileImageUrl = jsonObject.getString("profile_image_url");
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+  }
 
   public String getName() {
     return name;
@@ -28,16 +55,8 @@ public class User {
     return profileImageUrl;
   }
 
-  public static User fromJSON(JSONObject jsonObject){
-    User user = new User();
-    try {
-      user.uid = jsonObject.getLong("id");
-      user.name = jsonObject.getString("name");
-      user.screenName = jsonObject.getString("screen_name");
-      user.profileImageUrl = jsonObject.getString("profile_image_url");
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
-    return user;
+  public List<User> users(){
+    return getMany(User.class, "user");
   }
+
 }

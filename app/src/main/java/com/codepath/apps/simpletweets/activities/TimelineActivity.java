@@ -25,7 +25,9 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -36,7 +38,6 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
   private TwitterClient client;
   private ArrayList<Tweet> tweets;
   private TweetsRecyclerViewAdapter tweetsRecyclerViewAdapter;
-  private long maxId;
 
   @Bind(R.id.rvTweets) RecyclerView rvTweets;
   @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
@@ -56,9 +57,16 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
 
     // Setup refresh listener which triggers new data loading
     swipeContainer.setOnRefreshListener(mRefreshListener);
+    // Configure the refreshing colors
+    swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+        android.R.color.white,
+        android.R.color.holo_blue_light,
+        android.R.color.holo_orange_light);
 
     // Get client
     client = TwitterApplication.getRestClient();
+
+    // Populate TimeLine
     populateTimeline();
   }
 
@@ -84,9 +92,18 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
     }
   }
 
+  /**
+   * Timeline from Twitter or DB
+   */
   private void populateTimeline(){
-    client.getHomeTimeline(mJsonHttpResponseHandler, 0);
+    if(isInternetAvailable()){
+      client.getHomeTimeline(mJsonHttpResponseHandler, 0);
+    }else {
+      // No Internet - doosh...
+      getStoredTweets(0);
+    }
   }
+
 
   private void setupRecyclerView(){
     tweets = new ArrayList<>();
@@ -100,10 +117,27 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
     rvTweets.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
       @Override
       public void onLoadMore(int page, int totalItemsCount) {
-        long maxId = tweets.get(tweets.size() - 1).getUid() - 1; // -1 so that duplicate will not appear..
-        client.getHomeTimeline(mJsonHttpResponseHandler, maxId);
+        if(isInternetAvailable()) {
+          long maxId = tweets.get(tweets.size() - 1).getUid() - 1; // -1 so that duplicate will not appear..
+          client.getHomeTimeline(mJsonHttpResponseHandler, maxId);
+        }else{
+          getStoredTweets(page);
+        }
       }
     });
+  }
+
+  /**
+   * Get Stored Tweets
+   * @param page
+   */
+  private void getStoredTweets(int page){
+    int curSize = tweetsRecyclerViewAdapter.getItemCount();
+    List<Tweet> tweetList = Tweet.getAll(page);
+    if(tweetList.size() > 0){
+      tweets.addAll(tweetList);
+      tweetsRecyclerViewAdapter.notifyItemRangeInserted(curSize, tweetList.size());
+    }
   }
 
 
@@ -131,17 +165,34 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
     tweetsRecyclerViewAdapter.notifyItemInserted(0);
   }
 
+
+  public boolean isInternetAvailable() {
+    Runtime runtime = Runtime.getRuntime();
+    try {
+      Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+      int     exitValue = ipProcess.waitFor();
+      return (exitValue == 0);
+    } catch (IOException e)          { e.printStackTrace(); }
+    catch (InterruptedException e) { e.printStackTrace(); }
+    return false;
+  }
+
+
   private final SwipeRefreshLayout.OnRefreshListener mRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
     @Override
     public void onRefresh() {
-      // Clear Old Items
-      tweetsRecyclerViewAdapter.clear();
-      // Get New
-      client.getHomeTimeline(mJsonHttpResponseHandler, 0);
+      if(isInternetAvailable()) {
+        // Clear Old Items
+        tweetsRecyclerViewAdapter.clear();
+        // Get New
+        client.getHomeTimeline(mJsonHttpResponseHandler, 0);
+      }else{
+        swipeContainer.setRefreshing(false);
+      }
     }
   };
 
-  private final JsonHttpResponseHandler mJsonHttpResponseHandler = new JsonHttpResponseHandler(){
+  private final JsonHttpResponseHandler mJsonHttpResponseHandler = new JsonHttpResponseHandler() {
     @Override
     public void onStart() {
       Log.d("DEBUG", "Request: " + super.getRequestURI().toString());
@@ -163,6 +214,7 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
       ArrayList<Tweet> arrayList = Tweet.fromJSONArray(jsonArray);
       tweets.addAll(arrayList);
 
+      // TODO: Remove later
       Log.d("DEBUG", "curSize: " + curSize);
       Log.d("DEBUG", "tweets.size: " + tweets.size());
       Log.d("DEBUG", "arrayList.size: " + arrayList.size());

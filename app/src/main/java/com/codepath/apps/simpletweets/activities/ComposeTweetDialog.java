@@ -94,7 +94,8 @@ public class ComposeTweetDialog extends DialogFragment {
     @Override
     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
       Log.d("DEBUG", "POST Resposne: " + response.toString());
-      Tweet tweet = Tweet.fromJSON(response);
+      Tweet tweet = new Tweet(response);
+      tweet.save();
       tweetPostListener.onTweetPost(tweet);
       dismiss();
     }
