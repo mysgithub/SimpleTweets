@@ -35,13 +35,13 @@ public class Status {
     private String inReplyToScreenName;
     @SerializedName("in_reply_to_status_id")
     @Expose
-    private Integer inReplyToStatusId;
+    private Long inReplyToStatusId;
     @SerializedName("in_reply_to_status_id_str")
     @Expose
     private String inReplyToStatusIdStr;
     @SerializedName("in_reply_to_user_id")
     @Expose
-    private Integer inReplyToUserId;
+    private Long inReplyToUserId;
     @SerializedName("in_reply_to_user_id_str")
     @Expose
     private String inReplyToUserIdStr;
@@ -50,7 +50,7 @@ public class Status {
     private Place place;
     @SerializedName("retweet_count")
     @Expose
-    private Integer retweetCount;
+    private Long retweetCount;
     @SerializedName("retweeted")
     @Expose
     private Boolean retweeted;
@@ -213,7 +213,7 @@ public class Status {
      * @return
      *     The inReplyToStatusId
      */
-    public Integer getInReplyToStatusId() {
+    public Long getInReplyToStatusId() {
         return inReplyToStatusId;
     }
 
@@ -222,7 +222,7 @@ public class Status {
      * @param inReplyToStatusId
      *     The in_reply_to_status_id
      */
-    public void setInReplyToStatusId(Integer inReplyToStatusId) {
+    public void setInReplyToStatusId(Long inReplyToStatusId) {
         this.inReplyToStatusId = inReplyToStatusId;
     }
 
@@ -249,7 +249,7 @@ public class Status {
      * @return
      *     The inReplyToUserId
      */
-    public Integer getInReplyToUserId() {
+    public Long getInReplyToUserId() {
         return inReplyToUserId;
     }
 
@@ -258,7 +258,7 @@ public class Status {
      * @param inReplyToUserId
      *     The in_reply_to_user_id
      */
-    public void setInReplyToUserId(Integer inReplyToUserId) {
+    public void setInReplyToUserId(Long inReplyToUserId) {
         this.inReplyToUserId = inReplyToUserId;
     }
 
@@ -303,7 +303,7 @@ public class Status {
      * @return
      *     The retweetCount
      */
-    public Integer getRetweetCount() {
+    public Long getRetweetCount() {
         return retweetCount;
     }
 
@@ -312,7 +312,7 @@ public class Status {
      * @param retweetCount
      *     The retweet_count
      */
-    public void setRetweetCount(Integer retweetCount) {
+    public void setRetweetCount(Long retweetCount) {
         this.retweetCount = retweetCount;
     }
 

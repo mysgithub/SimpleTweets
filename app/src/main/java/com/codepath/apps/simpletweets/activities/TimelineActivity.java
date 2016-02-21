@@ -2,6 +2,7 @@ package com.codepath.apps.simpletweets.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -14,9 +15,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.codepath.apps.simpletweets.adapters.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.TwitterApplication;
+import com.codepath.apps.simpletweets.adapters.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.simpletweets.adapters.TweetsRecyclerViewAdapter;
 import com.codepath.apps.simpletweets.fragments.ComposeTweetDialog;
 import com.codepath.apps.simpletweets.interfaces.OnTweetPostListener;
@@ -46,6 +47,7 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
 
   @Bind(R.id.rvTweets) RecyclerView rvTweets;
   @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
+  @Bind(R.id.fab) FloatingActionButton fab;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,16 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
     setContentView(R.layout.activity_timeline);
 
     ButterKnife.bind(this);
+
+    // Floating Action Button
+    fab.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();*/
+        showComposeTweetDialog();
+      }
+    });
 
     // Change ActionBar Icon
     showTwitterIcon();
