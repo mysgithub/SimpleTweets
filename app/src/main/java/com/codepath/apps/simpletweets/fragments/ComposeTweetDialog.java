@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletweets.activities;
+package com.codepath.apps.simpletweets.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.codepath.apps.simpletweets.OnTweetPostListener;
+import com.codepath.apps.simpletweets.interfaces.OnTweetPostListener;
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.TwitterApplication;
 import com.codepath.apps.simpletweets.models.Profile;

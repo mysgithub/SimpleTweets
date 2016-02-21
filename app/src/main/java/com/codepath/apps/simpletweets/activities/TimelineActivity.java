@@ -15,7 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.codepath.apps.simpletweets.EndlessRecyclerViewScrollListener;
-import com.codepath.apps.simpletweets.OnTweetPostListener;
+import com.codepath.apps.simpletweets.fragments.ComposeTweetDialog;
+import com.codepath.apps.simpletweets.interfaces.OnTweetPostListener;
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.TwitterApplication;
 import com.codepath.apps.simpletweets.network.TwitterClient;

@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletweets;
+package com.codepath.apps.simpletweets.interfaces;
 
 import com.codepath.apps.simpletweets.models.Tweet;
 
