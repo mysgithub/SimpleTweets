@@ -55,6 +55,10 @@ public class Medium______ {
     @Expose
     private String sourceUserIdStr;
 
+    @SerializedName("video_info")
+    @Expose
+    private VideoInfo videoInfo;
+
     /**
      * 
      * @return
@@ -305,6 +309,24 @@ public class Medium______ {
      */
     public void setSourceUserIdStr(String sourceUserIdStr) {
         this.sourceUserIdStr = sourceUserIdStr;
+    }
+
+    /**
+     *
+     * @return
+     *     The videoInfo
+     */
+    public VideoInfo getVideoInfo() {
+        return videoInfo;
+    }
+
+    /**
+     *
+     * @param videoInfo
+     *     The video_info
+     */
+    public void setVideoInfo(VideoInfo videoInfo) {
+        this.videoInfo = videoInfo;
     }
 
 }

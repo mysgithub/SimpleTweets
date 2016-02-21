@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="10dp"
     tools:ignore="MissingPrefix"
     tools:context="com.codepath.apps.simpletweets.activities.TweetDetailActivity">
@@ -55,6 +56,7 @@
             android:adjustViewBounds="true"
             app:riv_corner_radius="4dp"
             />
+
     </LinearLayout>
 
     <TextView

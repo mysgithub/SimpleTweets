@@ -62,7 +62,7 @@ public class User {
     private Integer utcOffset;
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private Long id;
     @SerializedName("profile_image_url_https")
     @Expose
     private String profileImageUrlHttps;
@@ -438,7 +438,7 @@ public class User {
      * @return
      *     The id
      */
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -447,7 +447,7 @@ public class User {
      * @param id
      *     The id
      */
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
