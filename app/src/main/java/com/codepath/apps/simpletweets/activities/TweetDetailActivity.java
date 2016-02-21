@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.TwitterApplication;
-import com.codepath.apps.simpletweets.TwitterClient;
+import com.codepath.apps.simpletweets.network.TwitterClient;
 import com.codepath.apps.simpletweets.models.Tweet;
 import com.codepath.apps.simpletweets.utils.TwitterUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;

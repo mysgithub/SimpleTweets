@@ -18,7 +18,7 @@ import com.codepath.apps.simpletweets.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.simpletweets.OnTweetPostListener;
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.TwitterApplication;
-import com.codepath.apps.simpletweets.TwitterClient;
+import com.codepath.apps.simpletweets.network.TwitterClient;
 import com.codepath.apps.simpletweets.adapters.TweetsRecyclerViewAdapter;
 import com.codepath.apps.simpletweets.models.Tweet;
 import com.codepath.apps.simpletweets.utils.ItemClickSupport;

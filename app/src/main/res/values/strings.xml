@@ -11,5 +11,6 @@
     <string name="btn_tweet">Tweet</string>
     <string name="rel_time">8m</string>
     <string name="twitter">Twitter</string>
+    <string name="tweet">Tweet</string>
 
 </resources>

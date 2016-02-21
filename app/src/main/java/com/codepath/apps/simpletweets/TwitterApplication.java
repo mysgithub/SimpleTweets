@@ -3,6 +3,7 @@ package com.codepath.apps.simpletweets;
 import android.content.Context;
 
 import com.activeandroid.ActiveAndroid;
+import com.codepath.apps.simpletweets.network.TwitterClient;
 
 /*
  * This is the Android application itself and is used to configure various settings

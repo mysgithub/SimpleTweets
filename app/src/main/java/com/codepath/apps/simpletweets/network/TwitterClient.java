@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletweets;
+package com.codepath.apps.simpletweets.network;
 
 import android.content.Context;
 
@@ -71,6 +71,18 @@ public class TwitterClient extends OAuthBaseClient {
 		String apiUrl = getApiUrl("statuses/show.json");
 		RequestParams params = new RequestParams();
 		params.put("id", tweetId);
+
+		getClient().get(apiUrl, params, handler);
+	}
+
+
+	/**
+	 * Get Logged in user info
+	 * @param handler
+	 */
+	public void getUserInfo(AsyncHttpResponseHandler handler){
+		String apiUrl = getApiUrl("account/verify_credentials.json");
+		RequestParams params = new RequestParams();
 
 		getClient().get(apiUrl, params, handler);
 	}
