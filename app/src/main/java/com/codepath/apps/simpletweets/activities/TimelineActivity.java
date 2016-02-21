@@ -15,13 +15,13 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.codepath.apps.simpletweets.EndlessRecyclerViewScrollListener;
-import com.codepath.apps.simpletweets.fragments.ComposeTweetDialog;
-import com.codepath.apps.simpletweets.interfaces.OnTweetPostListener;
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.TwitterApplication;
-import com.codepath.apps.simpletweets.network.TwitterClient;
 import com.codepath.apps.simpletweets.adapters.TweetsRecyclerViewAdapter;
+import com.codepath.apps.simpletweets.fragments.ComposeTweetDialog;
+import com.codepath.apps.simpletweets.interfaces.OnTweetPostListener;
 import com.codepath.apps.simpletweets.models.Tweet;
+import com.codepath.apps.simpletweets.network.TwitterClient;
 import com.codepath.apps.simpletweets.utils.ItemClickSupport;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -244,7 +244,9 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
       Tweet tweet = tweets.get(position);
 
       Intent i = new Intent(getApplicationContext(), TweetDetailActivity.class);
-      i.putExtra("tweet", tweet);
+      Bundle bundle = new Bundle();
+      bundle.putParcelable("tweet", tweet);
+      i.putExtras(bundle);
       startActivity(i);
     }
   };

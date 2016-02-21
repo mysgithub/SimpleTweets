@@ -79,7 +79,8 @@ public class TweetDetailActivity extends AppCompatActivity {
 
   private void populateTweet(){
     // 1. Get Tweet
-    tweet = (Tweet) getIntent().getSerializableExtra("tweet");
+    tweet = (Tweet) getIntent().getParcelableExtra("tweet");
+    //tweet = (Tweet) getIntent().getSerializableExtra("tweet");
 
     // 2. Populate data from object
     String formattedUsername = String.format("<b>%s</b> @%s", tweet.getUser().getName(), tweet.getUser().getScreenName());
