@@ -34,7 +34,8 @@
             android:text="New Text"
             android:id="@+id/tvUserName"
             />
-        <TextView
+
+        <com.codepath.apps.simpletweets.utils.LinkifiedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Text"
