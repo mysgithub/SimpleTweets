@@ -148,7 +148,8 @@ public class TweetDetailActivity extends AppCompatActivity {
     @Override
     public void onClick(View v) {
       linearLayoutTweetButton.setVisibility(View.VISIBLE);
-      etTweetReply.setText("@" + tweet.getUser().getScreenName());
+      String formatted = String.format("@ %s ", tweet.getUser().getScreenName());
+      etTweetReply.setText(formatted);
       etTweetReply.setSelection(etTweetReply.length());
     }
   };
@@ -157,7 +158,6 @@ public class TweetDetailActivity extends AppCompatActivity {
     @Override
     public void onClick(View v) {
       // Post to Twitter and Display Toast
-      // Post Tweet
       twitterClient.postTweet(postResponseHandler, etTweetReply.getText().toString());
     }
   };
