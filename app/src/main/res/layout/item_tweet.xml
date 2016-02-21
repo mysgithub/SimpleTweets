@@ -28,12 +28,30 @@
         android:layout_toEndOf="@+id/ivProfileImage"
         android:orientation="vertical"
         >
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
-            android:id="@+id/tvUserName"
-            />
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/tvUserName"
+                android:textSize="16sp"
+                fontPath="fonts/Roboto-Bold.ttf"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvScreenName"
+                android:textSize="12sp"
+                android:text="@string/screen_name"
+                android:paddingLeft="5dp"
+                android:paddingStart="5dp"
+                fontPath="fonts/Roboto-Medium.ttf"
+                />
+        </LinearLayout>
+
 
         <com.codepath.apps.simpletweets.utils.LinkifiedTextView
             android:layout_width="wrap_content"
@@ -42,6 +60,8 @@
             android:id="@+id/tvBody"
             android:autoLink="all"
             android:paddingTop="5dp"
+            android:textSize="14sp"
+            fontPath="fonts/Roboto-Regular.ttf"
             />
     </LinearLayout>
 
@@ -49,11 +69,14 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="8m"
+        android:text="@string/rel_time"
         android:id="@+id/tvTime"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:textSize="14sp"
+        fontPath="fonts/Roboto-Regular.ttf"
+        />
 
 
 </RelativeLayout>

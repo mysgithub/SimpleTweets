@@ -1,10 +1,10 @@
 package com.codepath.apps.simpletweets.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -36,11 +36,13 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class TweetDetailActivity extends AppCompatActivity {
 
   @Bind(R.id.ivProfileImage) public ImageView ivProfileImage;
   @Bind(R.id.tvUserName) public TextView tvUserName;
+  @Bind(R.id.tvScreenName) public TextView tvScreenName;
   @Bind(R.id.tvBody) public TextView tvBody;
   @Bind(R.id.tvTime) public TextView tvTime;
   @Bind(R.id.etTweetReply) EditText etTweetReply;
@@ -78,6 +80,11 @@ public class TweetDetailActivity extends AppCompatActivity {
     populateTweet();
   }
 
+  @Override
+  protected void attachBaseContext(Context newBase) {
+    super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+  }
+
   public void showTwitterIcon(){
     ActionBar actionBar = getSupportActionBar();
     if(actionBar != null){
@@ -93,8 +100,10 @@ public class TweetDetailActivity extends AppCompatActivity {
     //tweet = (Tweet) getIntent().getSerializableExtra("tweet");
 
     // 2. Populate data from object
-    String formattedUsername = String.format("<b>%s</b> @%s", tweet.getUser().getName(), tweet.getUser().getScreenName());
-    tvUserName.setText(Html.fromHtml(formattedUsername));
+    String formattedScreenName = String.format("@%s", tweet.getUser().getScreenName());
+    tvUserName.setText(tweet.getUser().getName());
+    tvScreenName.setText(formattedScreenName);
+
     tvBody.setText(tweet.getBody());
     ivProfileImage.setImageResource(android.R.color.transparent); // clear out old image for recycled view
     Glide.with(getApplicationContext()).load(tweet.getUser().getProfileImageUrl()).into(ivProfileImage);
@@ -188,7 +197,7 @@ public class TweetDetailActivity extends AppCompatActivity {
     @Override
     public void onClick(View v) {
       linearLayoutTweetButton.setVisibility(View.VISIBLE);
-      String formatted = String.format("@ %s ", tweet.getUser().getScreenName());
+      String formatted = String.format("@%s ", tweet.getUser().getScreenName());
       etTweetReply.setText(formatted);
       etTweetReply.setSelection(etTweetReply.length());
     }

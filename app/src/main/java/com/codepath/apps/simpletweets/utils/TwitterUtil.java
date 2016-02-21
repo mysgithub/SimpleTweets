@@ -26,7 +26,7 @@ public class TwitterUtil {
       String relativeTime = DateUtils.getRelativeTimeSpanString(timestamp.getTime()).toString();
       String[] words = relativeTime.split("\\s+");
       if(relativeTime.startsWith("in")){
-        relativeDate = String.format("%ss", words[1]);
+        relativeDate = "new";
       }else{
         relativeDate = String.format("%s%s", words[0], words[1].charAt(0));
       }

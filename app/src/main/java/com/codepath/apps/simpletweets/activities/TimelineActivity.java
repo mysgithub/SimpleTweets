@@ -1,5 +1,6 @@
 package com.codepath.apps.simpletweets.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -36,6 +37,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class TimelineActivity extends AppCompatActivity implements OnTweetPostListener {
@@ -91,7 +93,12 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
 
   }
 
-  @Override
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater = getMenuInflater();
     inflater.inflate(R.menu.menu_timeline, menu);

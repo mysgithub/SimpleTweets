@@ -2,7 +2,6 @@ package com.codepath.apps.simpletweets.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,8 +43,9 @@ public class TweetsRecyclerViewAdapter extends RecyclerView.Adapter<TimelineView
     Tweet tweet = mTweets.get(position);
 
     // 2. Populate
-    String formattedUsername = String.format("<b>%s</b> @%s", tweet.getUser().getName(), tweet.getUser().getScreenName());
-    viewHolder.tvUserName.setText(Html.fromHtml(formattedUsername));
+    String formattedScreenName = String.format("@%s", tweet.getUser().getScreenName());
+    viewHolder.tvUserName.setText(tweet.getUser().getName());
+    viewHolder.tvScreenName.setText(formattedScreenName);
     viewHolder.tvBody.setText(tweet.getBody());
     viewHolder.ivProfileImage.setImageResource(android.R.color.transparent); // clear out old image for recycled view
     Glide.with(mContext).load(tweet.getUser().getProfileImageUrl()).fitCenter().into(viewHolder.ivProfileImage);

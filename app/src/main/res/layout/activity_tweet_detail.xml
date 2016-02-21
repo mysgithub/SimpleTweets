@@ -31,12 +31,33 @@
         android:layout_toEndOf="@+id/ivProfileImage"
         android:orientation="vertical"
         >
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
-            android:id="@+id/tvUserName"
-            />
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/tvUserName"
+                android:textSize="16sp"
+                fontPath="fonts/Roboto-Bold.ttf"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Test"
+                android:id="@+id/tvScreenName"
+                android:textSize="12sp"
+                android:paddingLeft="5dp"
+                android:paddingStart="5dp"
+                fontPath="fonts/Roboto-Medium.ttf"
+                />
+        </LinearLayout>
+
+
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,6 +66,8 @@
             android:autoLink="all"
             android:paddingTop="5dp"
             android:layout_marginBottom="12dp"
+            android:textSize="14sp"
+            fontPath="fonts/Roboto-Regular.ttf"
             />
         <com.makeramen.roundedimageview.RoundedImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -57,6 +80,7 @@
             app:riv_corner_radius="4dp"
             android:visibility="gone"
             />
+        <!--
         <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
@@ -82,7 +106,7 @@
                 android:fitsSystemWindows="true" />
 
         </FrameLayout>
-
+-->
     </LinearLayout>
 
     <TextView
@@ -92,7 +116,10 @@
         android:id="@+id/tvTime"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:textSize="14sp"
+        fontPath="fonts/Roboto-Regular.ttf"
+        />
 
 
 
@@ -110,7 +137,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/etTweetReply"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            fontPath="fonts/Roboto-Regular.ttf"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
