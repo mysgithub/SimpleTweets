@@ -14,7 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.codepath.apps.simpletweets.EndlessRecyclerViewScrollListener;
+import com.codepath.apps.simpletweets.adapters.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.TwitterApplication;
 import com.codepath.apps.simpletweets.adapters.TweetsRecyclerViewAdapter;
