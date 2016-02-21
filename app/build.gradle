@@ -49,6 +49,8 @@ dependencies {
     compile 'com.makeramen:roundedimageview:2.2.1'
     // Parceler
     compile 'org.parceler:parceler-api:1.0.4'
+    // Gson
+    compile 'com.google.code.gson:gson:2.4'
 }
 
 
