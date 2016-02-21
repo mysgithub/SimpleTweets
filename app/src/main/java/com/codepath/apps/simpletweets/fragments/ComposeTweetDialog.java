@@ -21,14 +21,15 @@ import com.bumptech.glide.Glide;
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.TwitterApplication;
 import com.codepath.apps.simpletweets.interfaces.OnTweetPostListener;
-import com.codepath.apps.simpletweets.models.Profile;
 import com.codepath.apps.simpletweets.models.Tweet;
+import com.codepath.apps.simpletweets.models.User;
+import com.codepath.apps.simpletweets.models.gson.TweetPostResponse;
+import com.codepath.apps.simpletweets.models.gson.TwitterProfileResponse;
 import com.codepath.apps.simpletweets.network.TwitterClient;
 import com.codepath.apps.simpletweets.utils.TwitterUtil;
-import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.apache.http.Header;
-import org.json.JSONObject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,7 +49,7 @@ public class ComposeTweetDialog extends DialogFragment {
 
   private TwitterClient twitterClient;
   private OnTweetPostListener tweetPostListener;
-  private Profile profile;
+  private TwitterProfileResponse twitterProfileResponse;
 
 
   public ComposeTweetDialog(){}
@@ -106,52 +107,66 @@ public class ComposeTweetDialog extends DialogFragment {
     tvCharCount.setText(String.valueOf(TwitterUtil.TWEET_MAX_ALLOWED_CHAR));
 
     // Get User Info
-    twitterClient.getUserInfo(mUserInfoResponseHandler);
+    twitterClient.getProfileInfo(mProfileInfoResponseHandler);
   }
 
   public void setProfileData(){
-
-    Glide.with(getContext()).load(profile.getProfileImageUrl()).fitCenter().into(ivProfileImage);
-    tvName.setText(profile.getName());
-    tvScreenName.setText("@" + profile.getScreenName());
+    Glide.with(getContext()).load(twitterProfileResponse.getProfileImageUrl()).fitCenter().into(ivProfileImage);
+    tvName.setText(twitterProfileResponse.getName());
+    String formatted = String.format("@%s", twitterProfileResponse.getScreenName());
+    tvScreenName.setText(formatted);
   }
 
-  private final JsonHttpResponseHandler mPostTweetResponseHandler = new JsonHttpResponseHandler(){
+  private final TextHttpResponseHandler mPostTweetResponseHandler = new TextHttpResponseHandler(){
     @Override
     public void onStart() {
       Log.d("DEBUG", "POST Request: " + super.getRequestURI().toString());
     }
 
     @Override
-    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-      Log.d("DEBUG", "POST Resposne: " + response.toString());
-      Tweet tweet = new Tweet(response);
-      tweet.save();
+    public void onSuccess(int statusCode, Header[] headers, String responseString) {
+      Log.d("DEBUG", "POST Resposne: " + responseString);
+
+      TweetPostResponse tweetPostResponse = TweetPostResponse.parseJSON(responseString);
+      User user = new User();
+      user.setUid(tweetPostResponse.getUser().getId());
+      user.setName(tweetPostResponse.getUser().getName());
+      user.setScreenName(tweetPostResponse.getUser().getScreenName());
+      user.setProfileImageUrl(tweetPostResponse.getUser().getProfileImageUrl());
+      user.save(); // save in db
+      Tweet tweet = new Tweet();
+      tweet.setBody(tweetPostResponse.getText());
+      tweet.setUid(tweetPostResponse.getId());
+      tweet.setCreatedAt(TwitterUtil.getDateFromString(tweetPostResponse.getCreatedAt()));
+      tweet.setUser(user);
+      tweet.save(); // save in db
+
       tweetPostListener.onTweetPost(tweet);
       dismiss();
     }
 
     @Override
-    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
       Toast.makeText(getContext(), "Unable to connect to twitter.com", Toast.LENGTH_SHORT).show();
     }
   };
 
-  private final JsonHttpResponseHandler mUserInfoResponseHandler = new JsonHttpResponseHandler(){
+  private final TextHttpResponseHandler mProfileInfoResponseHandler = new TextHttpResponseHandler(){
     @Override
     public void onStart() {
       Log.d("DEBUG", "Request: " + super.getRequestURI().toString());
     }
 
     @Override
-    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-      Log.d("DEBUG", "Resposne: " + response.toString());
-      profile = new Profile(response);
+    public void onSuccess(int statusCode, Header[] headers, String responseString) {
+      Log.d("DEBUG", "Resposne: " + responseString);
+      // Using Gson
+      twitterProfileResponse = TwitterProfileResponse.parseJSON(responseString);
       setProfileData();
     }
 
     @Override
-    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
       Toast.makeText(getContext(), "Sorry!! Unable to connect to twitter", Toast.LENGTH_SHORT).show();
     }
   };

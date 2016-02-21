@@ -1,25 +1,22 @@
 package com.codepath.apps.simpletweets.models;
 
 import android.os.Parcelable;
-import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
+import com.codepath.apps.simpletweets.utils.TwitterUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by Shyam Rokde on 2/16/16.
@@ -57,50 +54,35 @@ public class Tweet extends Model implements Parcelable {
     return user;
   }
 
+  public void setBody(String body) {
+    this.body = body;
+  }
+
+  public void setUid(long uid) {
+    this.uid = uid;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  // TODO: Not used because of GSON - Remove later
   public Tweet(JSONObject jsonObject){
     super();
     try{
       this.body = jsonObject.getString("text");
       this.uid = jsonObject.getLong("id");
-      this.createdAt = getDateFromString(jsonObject.getString("created_at"));
+      this.createdAt = TwitterUtil.getDateFromString(jsonObject.getString("created_at"));
       this.user = new User(jsonObject.getJSONObject("user"));
     }catch (JSONException e){
       e.printStackTrace();
     }
   }
 
-
-  public Date getDateFromString(String date) {
-    SimpleDateFormat sf = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy", Locale.ENGLISH);
-    sf.setLenient(true);
-
-    try {
-      return sf.parse(date);
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
-    return null;
-  }
-
-  // TODO: Remove later
-  private String getFormattedRelativeTime(String createdAt){
-    String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
-    SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
-    sf.setLenient(true);
-
-    String relativeDate = "";
-
-    try {
-      long dateMillis = sf.parse(createdAt).getTime();
-      String relativeTime = DateUtils.getRelativeTimeSpanString(dateMillis).toString();
-      String[] words = relativeTime.split("\\s+");
-      relativeDate = String.format("%s%s", words[0], words[1].charAt(0));
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
-
-    return relativeDate;
-  }
 
   public static ArrayList<Tweet> fromJSONArray(JSONArray jsonArray){
     ArrayList<Tweet> tweets = new ArrayList<>();

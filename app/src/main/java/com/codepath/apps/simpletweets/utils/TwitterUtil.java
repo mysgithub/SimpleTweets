@@ -2,6 +2,7 @@ package com.codepath.apps.simpletweets.utils;
 
 import android.text.format.DateUtils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -30,5 +31,22 @@ public class TwitterUtil {
     }
 
     return relativeDate;
+  }
+
+  /**
+   * Gate Date From Twitter String Format
+   * @param date
+   * @return
+   */
+  public static Date getDateFromString(String date) {
+    SimpleDateFormat sf = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy", Locale.ENGLISH);
+    sf.setLenient(true);
+
+    try {
+      return sf.parse(date);
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 }

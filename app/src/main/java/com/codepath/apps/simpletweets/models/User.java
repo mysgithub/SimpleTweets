@@ -31,6 +31,7 @@ public class User extends Model implements Parcelable {
     super();
   }
 
+  // TODO: Not used because of GSON - Remove later
   public User(JSONObject jsonObject){
     super();
     try {
@@ -61,6 +62,22 @@ public class User extends Model implements Parcelable {
 
   public List<User> users(){
     return getMany(User.class, "user");
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setUid(long uid) {
+    this.uid = uid;
+  }
+
+  public void setScreenName(String screenName) {
+    this.screenName = screenName;
+  }
+
+  public void setProfileImageUrl(String profileImageUrl) {
+    this.profileImageUrl = profileImageUrl;
   }
 
   @Override
