@@ -8,7 +8,8 @@
     tools:ignore="MissingPrefix"
     tools:context="com.codepath.apps.simpletweets.activities.TweetDetailActivity">
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/ivProfileImage"
@@ -16,7 +17,10 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="#9bb9fb"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        android:adjustViewBounds="true"
+        app:riv_corner_radius="4dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,13 +45,15 @@
             android:paddingTop="5dp"
             android:layout_marginBottom="12dp"
             />
-        <ImageView
+        <com.makeramen.roundedimageview.RoundedImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:maxHeight="200dp"
             android:id="@+id/ivMedia"
             android:background="#bbdefb"
             android:adjustViewBounds="true"
+            app:riv_corner_radius="4dp"
             />
     </LinearLayout>
 

@@ -15,13 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.TwitterApplication;
-import com.codepath.apps.simpletweets.network.TwitterClient;
 import com.codepath.apps.simpletweets.models.Tweet;
+import com.codepath.apps.simpletweets.network.TwitterClient;
 import com.codepath.apps.simpletweets.utils.TwitterUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.squareup.picasso.Picasso;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -63,6 +63,7 @@ public class TweetDetailActivity extends AppCompatActivity {
 
     // Set Background
     ivMedia.setBackgroundResource(android.R.color.transparent);
+    ivProfileImage.setBackgroundResource(android.R.color.transparent);
 
     // Display selected tweet
     populateTweet();
@@ -87,7 +88,7 @@ public class TweetDetailActivity extends AppCompatActivity {
     tvUserName.setText(Html.fromHtml(formattedUsername));
     tvBody.setText(tweet.getBody());
     ivProfileImage.setImageResource(android.R.color.transparent); // clear out old image for recycled view
-    Picasso.with(getApplicationContext()).load(tweet.getUser().getProfileImageUrl()).into(ivProfileImage);
+    Glide.with(getApplicationContext()).load(tweet.getUser().getProfileImageUrl()).into(ivProfileImage);
     tvTime.setText(TwitterUtil.getFormattedRelativeTime(tweet.getCreatedAt()));
     etTweetReply.setHint("Reply to " + tweet.getUser().getName());
 
@@ -117,17 +118,16 @@ public class TweetDetailActivity extends AppCompatActivity {
 
       // Show some more details about tweet
       try {
+        // TODO: org.json.JSONException: No value for media
         JSONArray jsonMediaArray = jsonObject.getJSONObject("entities").getJSONArray("media");
         // Get First and Show
         if(jsonMediaArray.length() > 0){
           JSONObject mediaJsonObject = (JSONObject) jsonMediaArray.get(0);
           String mediaUrl = mediaJsonObject.getString("media_url");
           if(!mediaUrl.isEmpty()){
-            // Show in
             ivMedia.setImageResource(android.R.color.transparent);
-            Picasso.with(getApplicationContext()).load(mediaUrl)
-                .fit()
-                .transform(TwitterUtil.roundedCornerTransformation).into(ivMedia);
+            Glide.with(getApplicationContext()).load(mediaUrl)
+                .into(ivMedia);
           }else{
             ivMedia.setVisibility(View.GONE);
           }

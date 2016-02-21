@@ -1,10 +1,6 @@
 package com.codepath.apps.simpletweets.utils;
 
-import android.graphics.Color;
 import android.text.format.DateUtils;
-
-import com.makeramen.roundedimageview.RoundedTransformationBuilder;
-import com.squareup.picasso.Transformation;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,11 +31,4 @@ public class TwitterUtil {
 
     return relativeDate;
   }
-
-  public static Transformation roundedCornerTransformation = new RoundedTransformationBuilder()
-      .borderColor(Color.TRANSPARENT)
-      .borderWidthDp(0)
-      .cornerRadiusDp(3)
-      .oval(false)
-      .build();
 }

@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.TwitterApplication;
 import com.codepath.apps.simpletweets.interfaces.OnTweetPostListener;
@@ -25,7 +26,6 @@ import com.codepath.apps.simpletweets.models.Tweet;
 import com.codepath.apps.simpletweets.network.TwitterClient;
 import com.codepath.apps.simpletweets.utils.TwitterUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.squareup.picasso.Picasso;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
@@ -61,6 +61,9 @@ public class ComposeTweetDialog extends DialogFragment {
     getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
     ButterKnife.bind(this, view);
+
+    // Set Background
+    ivProfileImage.setBackgroundResource(android.R.color.transparent);
 
     // Get client
     twitterClient = TwitterApplication.getRestClient();
@@ -108,7 +111,7 @@ public class ComposeTweetDialog extends DialogFragment {
 
   public void setProfileData(){
 
-    Picasso.with(getContext()).load(profile.getProfileImageUrl()).transform(TwitterUtil.roundedCornerTransformation).into(ivProfileImage);
+    Glide.with(getContext()).load(profile.getProfileImageUrl()).fitCenter().into(ivProfileImage);
     tvName.setText(profile.getName());
     tvScreenName.setText("@" + profile.getScreenName());
   }
@@ -130,9 +133,7 @@ public class ComposeTweetDialog extends DialogFragment {
 
     @Override
     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-      Log.d("Failed2: ", "" + statusCode);
-      Log.d("Error : ", "" + throwable);
-      Log.d("Exception:", errorResponse.toString());
+      Toast.makeText(getContext(), "Unable to connect to twitter.com", Toast.LENGTH_SHORT).show();
     }
   };
 

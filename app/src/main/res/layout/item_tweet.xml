@@ -6,15 +6,19 @@
                 android:padding="10dp"
                 tools:ignore="MissingPrefix">
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/ivProfileImage"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="#9bb9fb"
-        android:layout_marginRight="5dp"/>
+        android:background="@android:color/transparent"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        android:adjustViewBounds="true"
+        app:riv_corner_radius="4dp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"

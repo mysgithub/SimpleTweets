@@ -7,10 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.models.Tweet;
 import com.codepath.apps.simpletweets.utils.TwitterUtil;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -48,7 +48,7 @@ public class TweetsRecyclerViewAdapter extends RecyclerView.Adapter<TimelineView
     viewHolder.tvUserName.setText(Html.fromHtml(formattedUsername));
     viewHolder.tvBody.setText(tweet.getBody());
     viewHolder.ivProfileImage.setImageResource(android.R.color.transparent); // clear out old image for recycled view
-    Picasso.with(mContext).load(tweet.getUser().getProfileImageUrl()).into(viewHolder.ivProfileImage);
+    Glide.with(mContext).load(tweet.getUser().getProfileImageUrl()).fitCenter().into(viewHolder.ivProfileImage);
     viewHolder.tvTime.setText(TwitterUtil.getFormattedRelativeTime(tweet.getCreatedAt()));
   }
 
