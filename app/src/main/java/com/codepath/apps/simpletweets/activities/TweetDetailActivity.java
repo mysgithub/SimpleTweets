@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,6 +27,8 @@ import com.codepath.apps.simpletweets.models.gson.singletweet.Variant;
 import com.codepath.apps.simpletweets.network.TwitterClient;
 import com.codepath.apps.simpletweets.utils.TwitterUtil;
 import com.loopj.android.http.TextHttpResponseHandler;
+import com.malmstein.fenster.controller.MediaFensterPlayerController;
+import com.malmstein.fenster.view.FensterVideoView;
 
 import org.apache.http.Header;
 
@@ -45,7 +48,9 @@ public class TweetDetailActivity extends AppCompatActivity {
   @Bind(R.id.btnTweet) Button btnTweet;
   @Bind(R.id.linearLayoutTweetButton) LinearLayout linearLayoutTweetButton;
   @Bind(R.id.ivMedia) ImageView ivMedia;
-
+  @Bind(R.id.play_video_texture) FensterVideoView textureVideoView;
+  @Bind(R.id.play_video_controller) MediaFensterPlayerController playerController;
+  @Bind(R.id.fmLayout) FrameLayout fmLayout;
 
   private TwitterClient twitterClient;
   private Tweet tweet;
@@ -105,10 +110,10 @@ public class TweetDetailActivity extends AppCompatActivity {
     btnTweet.setOnClickListener(mOnReplyTweetButtonClickListener);
 
     // 3. Call Twitter for more details
-    // TODO: twitterClient.getTweet(mTweetDetailResponseHandler, tweet.getUid());
-    // TODO - Just Hard code TweetId for now for video then we can remove it
-    long twid = 699676008585166848L;
-    twitterClient.getTweet(mTweetDetailResponseHandler, twid);
+    twitterClient.getTweet(mTweetDetailResponseHandler, tweet.getUid());
+    // TODO - Just Hard code TweetId for testing video
+    /*long twid = 699676008585166848L;
+    twitterClient.getTweet(mTweetDetailResponseHandler, twid);*/
 
     Log.d("DEBUG", "TweetId: " + tweet.getUid());
   }
@@ -145,6 +150,7 @@ public class TweetDetailActivity extends AppCompatActivity {
         if(!tweetResponse.getExtendedEntities().getMedia().get(0).getExpandedUrl().isEmpty()){
           mediaUrl = tweetResponse.getExtendedEntities().getMedia().get(0).getMediaUrl();
           ivMedia.setImageResource(android.R.color.transparent);
+          ivMedia.setVisibility(View.VISIBLE);
           Glide.with(getApplicationContext()).load(mediaUrl).into(ivMedia);
           Log.d("DEBUG", "We got video - " + tweetResponse.getExtendedEntities().getMedia().get(0).getExpandedUrl());
 
@@ -152,10 +158,14 @@ public class TweetDetailActivity extends AppCompatActivity {
           List<Variant> variantList = tweetResponse.getExtendedEntities().getMedia().get(0).getVideoInfo().getVariants();
           for (Variant v: variantList) {
             if(v.getContentType().equalsIgnoreCase("video/mp4")){
+              ivMedia.setVisibility(View.GONE);
+              fmLayout.setVisibility(View.VISIBLE);
               // Finally we got this
               String videoUrl = v.getUrl();
               // Display Video
-
+              textureVideoView.setMediaController(playerController);
+              textureVideoView.setVideo(videoUrl, playerController.DEFAULT_VIDEO_START);
+              textureVideoView.start();
             }
           }
         }

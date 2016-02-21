@@ -32,7 +32,7 @@ The following **optional** features are implemented:
 The following **bonus** features are implemented:
 
 * [X] User can see embedded image media within the tweet detail view
-* [ ] User can watch embedded video within the tweet
+* [X] User can watch embedded video within the tweet
 * [X] Compose tweet functionality is build using modal overlay
 * [X] Use Parcelable instead of Serializable using the popular [Parceler library](http://guides.codepath.com/android/Using-Parceler).
 * [X] Apply the popular [Butterknife annotation library](http://guides.codepath.com/android/Reducing-View-Boilerplate-with-Butterknife) to reduce view boilerplate.

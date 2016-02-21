@@ -53,6 +53,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.4'
     // Video
     compile 'com.yqritc:android-scalablevideoview:1.0.3'
+    compile 'com.malmstein:fenster:0.0.2'
 }
 
 
