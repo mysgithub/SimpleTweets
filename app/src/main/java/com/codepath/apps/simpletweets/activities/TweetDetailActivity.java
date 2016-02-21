@@ -21,15 +21,12 @@ import com.codepath.apps.simpletweets.TwitterApplication;
 import com.codepath.apps.simpletweets.models.Tweet;
 import com.codepath.apps.simpletweets.models.User;
 import com.codepath.apps.simpletweets.models.gson.TweetPostResponse;
+import com.codepath.apps.simpletweets.models.gson.singletweet.TweetResponse;
 import com.codepath.apps.simpletweets.network.TwitterClient;
 import com.codepath.apps.simpletweets.utils.TwitterUtil;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -109,40 +106,32 @@ public class TweetDetailActivity extends AppCompatActivity {
     Log.d("DEBUG", "TweetId: " + tweet.getUid());
   }
 
-  private final JsonHttpResponseHandler mTweetDetailResponseHandler = new JsonHttpResponseHandler() {
+  private final TextHttpResponseHandler mTweetDetailResponseHandler = new TextHttpResponseHandler() {
     @Override
     public void onStart() {
       Log.d("DEBUG", "Tweet Request: " + super.getRequestURI().toString());
     }
 
     @Override
-    public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
-      Log.d("DEBUG", "Tweet Resposne: " + jsonObject);
+    public void onSuccess(int statusCode, Header[] headers, String responseString) {
+      Log.d("DEBUG", "Tweet Resposne: " + responseString);
 
-      // Show some more details about tweet
-      try {
-        // TODO: org.json.JSONException: No value for media
-        JSONArray jsonMediaArray = jsonObject.getJSONObject("entities").getJSONArray("media");
-        // Get First and Show
-        if(jsonMediaArray.length() > 0){
-          JSONObject mediaJsonObject = (JSONObject) jsonMediaArray.get(0);
-          String mediaUrl = mediaJsonObject.getString("media_url");
-          if(!mediaUrl.isEmpty()){
-            ivMedia.setImageResource(android.R.color.transparent);
-            Glide.with(getApplicationContext()).load(mediaUrl)
-                .into(ivMedia);
-          }else{
-            ivMedia.setVisibility(View.GONE);
-          }
+      TweetResponse tweetResponse = TweetResponse.parseJSON(responseString);
+      if(tweetResponse.getEntities().getMedia() != null && tweetResponse.getEntities().getMedia().size() > 0){
+        String mediaUrl = tweetResponse.getEntities().getMedia().get(0).getMediaUrl();
+        if(!mediaUrl.isEmpty()){
+          ivMedia.setImageResource(android.R.color.transparent);
+          Glide.with(getApplicationContext()).load(mediaUrl)
+              .into(ivMedia);
+        }else{
+          ivMedia.setVisibility(View.GONE);
         }
-      } catch (JSONException e) {
-        e.printStackTrace();
-        ivMedia.setVisibility(View.GONE);
       }
     }
 
     @Override
-    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+      Log.d("ERROR", "Unable to find tweet - " + responseString);
       Toast.makeText(TweetDetailActivity.this, "Unable to connect to twitter.com", Toast.LENGTH_SHORT).show();
     }
   };
