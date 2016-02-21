@@ -155,19 +155,23 @@ public class TweetDetailActivity extends AppCompatActivity {
           Log.d("DEBUG", "We got video - " + tweetResponse.getExtendedEntities().getMedia().get(0).getExpandedUrl());
 
           // We need Mp4 - check for it now
-          List<Variant> variantList = tweetResponse.getExtendedEntities().getMedia().get(0).getVideoInfo().getVariants();
-          for (Variant v: variantList) {
-            if(v.getContentType().equalsIgnoreCase("video/mp4")){
-              ivMedia.setVisibility(View.GONE);
-              fmLayout.setVisibility(View.VISIBLE);
-              // Finally we got this
-              String videoUrl = v.getUrl();
-              // Display Video
-              textureVideoView.setMediaController(playerController);
-              textureVideoView.setVideo(videoUrl, playerController.DEFAULT_VIDEO_START);
-              textureVideoView.start();
+          if(tweetResponse.getExtendedEntities().getMedia().get(0).getVideoInfo() != null
+                  && tweetResponse.getExtendedEntities().getMedia().get(0).getVideoInfo().getVariants() != null){
+            List<Variant> variantList = tweetResponse.getExtendedEntities().getMedia().get(0).getVideoInfo().getVariants();
+            for (Variant v: variantList) {
+              if(v.getContentType().equalsIgnoreCase("video/mp4")){
+                ivMedia.setVisibility(View.GONE);
+                fmLayout.setVisibility(View.VISIBLE);
+                // Finally we got this
+                String videoUrl = v.getUrl();
+                // Display Video
+                textureVideoView.setMediaController(playerController);
+                textureVideoView.setVideo(videoUrl, playerController.DEFAULT_VIDEO_START);
+                textureVideoView.start();
+              }
             }
           }
+          //
         }
       }
 
