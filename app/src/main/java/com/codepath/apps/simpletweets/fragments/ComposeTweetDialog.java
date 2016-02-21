@@ -1,6 +1,7 @@
 package com.codepath.apps.simpletweets.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -50,6 +51,7 @@ public class ComposeTweetDialog extends DialogFragment {
   private TwitterClient twitterClient;
   private OnTweetPostListener tweetPostListener;
   private TwitterProfileResponse twitterProfileResponse;
+  private Context mContext;
 
 
   public ComposeTweetDialog(){}
@@ -60,6 +62,8 @@ public class ComposeTweetDialog extends DialogFragment {
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_compose, container);
     getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
+    mContext = getContext();
 
     ButterKnife.bind(this, view);
 
@@ -168,7 +172,7 @@ public class ComposeTweetDialog extends DialogFragment {
 
     @Override
     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-      Toast.makeText(getContext(), "Sorry!! Unable to connect to twitter", Toast.LENGTH_SHORT).show();
+      Toast.makeText(mContext, "Sorry!! Unable to connect to twitter.com", Toast.LENGTH_SHORT).show();
     }
   };
 

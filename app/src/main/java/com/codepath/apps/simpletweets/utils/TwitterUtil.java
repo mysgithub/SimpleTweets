@@ -2,6 +2,7 @@ package com.codepath.apps.simpletweets.utils;
 
 import android.text.format.DateUtils;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -53,5 +54,16 @@ public class TwitterUtil {
       e.printStackTrace();
     }
     return null;
+  }
+
+  public static boolean isInternetAvailable() {
+    Runtime runtime = Runtime.getRuntime();
+    try {
+      Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+      int     exitValue = ipProcess.waitFor();
+      return (exitValue == 0);
+    } catch (IOException e)          { e.printStackTrace(); }
+    catch (InterruptedException e) { e.printStackTrace(); }
+    return false;
   }
 }

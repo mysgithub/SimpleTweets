@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.TwitterApplication;
@@ -25,13 +26,13 @@ import com.codepath.apps.simpletweets.interfaces.OnTweetPostListener;
 import com.codepath.apps.simpletweets.models.Tweet;
 import com.codepath.apps.simpletweets.network.TwitterClient;
 import com.codepath.apps.simpletweets.utils.ItemClickSupport;
+import com.codepath.apps.simpletweets.utils.TwitterUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,7 +114,7 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
     int id = item.getItemId();
     switch (id){
       case R.id.itemCompose:
-        showComposeTweetDialog();
+          showComposeTweetDialog();
         return true;
       default:
         return super.onOptionsItemSelected(item);
@@ -124,7 +125,7 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
    * Timeline from Twitter or DB
    */
   private void populateTimeline(){
-    if(isInternetAvailable()){
+    if(TwitterUtil.isInternetAvailable()){
       client.getHomeTimeline(mJsonHttpResponseHandler, 0);
     }else {
       // No Internet - doosh...
@@ -145,7 +146,7 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
     rvTweets.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
       @Override
       public void onLoadMore(int page, int totalItemsCount) {
-        if(isInternetAvailable()) {
+        if(TwitterUtil.isInternetAvailable()) {
           long maxId = tweets.get(tweets.size() - 1).getUid() - 1; // -1 so that duplicate will not appear..
           client.getHomeTimeline(mJsonHttpResponseHandler, maxId);
         }else{
@@ -170,10 +171,14 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
 
 
   public void showComposeTweetDialog(){
-    FragmentManager fragmentManager = getSupportFragmentManager();
-    ComposeTweetDialog dialog = ComposeTweetDialog.newInstance();
+      if(TwitterUtil.isInternetAvailable()) {
+          FragmentManager fragmentManager = getSupportFragmentManager();
+          ComposeTweetDialog dialog = ComposeTweetDialog.newInstance();
 
-    dialog.show(fragmentManager, "compose");
+          dialog.show(fragmentManager, "compose");
+      }else{
+          Toast.makeText(TimelineActivity.this, "Unable to connect to twitter.com", Toast.LENGTH_LONG).show();
+      }
   }
 
   public void showTwitterIcon(){
@@ -193,28 +198,20 @@ public class TimelineActivity extends AppCompatActivity implements OnTweetPostLi
   }
 
 
-  public boolean isInternetAvailable() {
-    Runtime runtime = Runtime.getRuntime();
-    try {
-      Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-      int     exitValue = ipProcess.waitFor();
-      return (exitValue == 0);
-    } catch (IOException e)          { e.printStackTrace(); }
-    catch (InterruptedException e) { e.printStackTrace(); }
-    return false;
-  }
+
 
 
   private final SwipeRefreshLayout.OnRefreshListener mRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
     @Override
     public void onRefresh() {
-      if(isInternetAvailable()) {
+      if(TwitterUtil.isInternetAvailable()) {
         // Clear Old Items
         tweetsRecyclerViewAdapter.clear();
         // Get New
         client.getHomeTimeline(mJsonHttpResponseHandler, 0);
       }else{
-        swipeContainer.setRefreshing(false);
+          Toast.makeText(TimelineActivity.this, "Unable to connect to twitter.com", Toast.LENGTH_LONG).show();
+          swipeContainer.setRefreshing(false);
       }
     }
   };
