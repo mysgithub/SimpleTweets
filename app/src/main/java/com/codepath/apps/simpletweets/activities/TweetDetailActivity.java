@@ -24,6 +24,8 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import butterknife.Bind;
@@ -39,6 +41,7 @@ public class TweetDetailActivity extends AppCompatActivity {
   @Bind(R.id.tvCharCount) TextView tvCharCount;
   @Bind(R.id.btnTweet) Button btnTweet;
   @Bind(R.id.linearLayoutTweetButton) LinearLayout linearLayoutTweetButton;
+  @Bind(R.id.ivMedia) ImageView ivMedia;
 
   private TwitterClient twitterClient;
   private Tweet tweet;
@@ -57,6 +60,9 @@ public class TweetDetailActivity extends AppCompatActivity {
 
     // Twitter Client
     twitterClient = TwitterApplication.getRestClient();
+
+    // Set Background
+    ivMedia.setBackgroundResource(android.R.color.transparent);
 
     // Display selected tweet
     populateTweet();
@@ -93,32 +99,47 @@ public class TweetDetailActivity extends AppCompatActivity {
     btnTweet.setOnClickListener(mOnReplyTweetButtonClickListener);
 
     // 3. Call Twitter for more details
-    //twitterClient.getTweet(mJsonHttpResponseHandler, tweet.getUid());
+    twitterClient.getTweet(mTweetDetailResponseHandler, tweet.getUid());
 
+    Log.d("DEBUG", "TweetId: " + tweet.getUid());
   }
 
-  private final JsonHttpResponseHandler mJsonHttpResponseHandler = new JsonHttpResponseHandler() {
+  private final JsonHttpResponseHandler mTweetDetailResponseHandler = new JsonHttpResponseHandler() {
     @Override
     public void onStart() {
       Log.d("DEBUG", "Tweet Request: " + super.getRequestURI().toString());
     }
 
     @Override
-    public void onFinish() {
-      super.onFinish();
-    }
-
-    @Override
     public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
       Log.d("DEBUG", "Tweet Resposne: " + jsonObject);
 
+      // Show some more details about tweet
+      try {
+        JSONArray jsonMediaArray = jsonObject.getJSONObject("entities").getJSONArray("media");
+        // Get First and Show
+        if(jsonMediaArray.length() > 0){
+          JSONObject mediaJsonObject = (JSONObject) jsonMediaArray.get(0);
+          String mediaUrl = mediaJsonObject.getString("media_url");
+          if(!mediaUrl.isEmpty()){
+            // Show in
+            ivMedia.setImageResource(android.R.color.transparent);
+            Picasso.with(getApplicationContext()).load(mediaUrl)
+                .fit()
+                .transform(TwitterUtil.roundedCornerTransformation).into(ivMedia);
+          }else{
+            ivMedia.setVisibility(View.GONE);
+          }
+        }
+      } catch (JSONException e) {
+        e.printStackTrace();
+        ivMedia.setVisibility(View.GONE);
+      }
     }
 
     @Override
     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-      Log.d("Failed2: ", "" + statusCode);
-      Log.d("Error : ", "" + throwable);
-      Log.d("Exception:", errorResponse.toString());
+      Toast.makeText(TweetDetailActivity.this, "Unable to connect to twitter.com", Toast.LENGTH_SHORT).show();
     }
   };
 
@@ -142,9 +163,7 @@ public class TweetDetailActivity extends AppCompatActivity {
 
   private final TextWatcher mTextWatcher = new TextWatcher() {
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -158,9 +177,7 @@ public class TweetDetailActivity extends AppCompatActivity {
     }
 
     @Override
-    public void afterTextChanged(Editable s) {
-
-    }
+    public void afterTextChanged(Editable s) { }
   };
 
   private final JsonHttpResponseHandler postResponseHandler = new JsonHttpResponseHandler(){

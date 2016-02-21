@@ -17,7 +17,7 @@ public class Profile {
       this.profileImageUrl = jsonObject.getString("profile_image_url");
       this.followingCount = jsonObject.getInt("friends_count");
       this.followersCount = jsonObject.getInt("followers_count");
-      this.tweetsCount = jsonObject.getInt("");
+      this.tweetsCount = jsonObject.getInt("statuses_count");
     } catch (JSONException e) {
       e.printStackTrace();
     }

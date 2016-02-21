@@ -19,7 +19,7 @@
         android:layout_marginRight="5dp"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/ivProfileImage"
@@ -39,6 +39,15 @@
             android:id="@+id/tvBody"
             android:autoLink="all"
             android:paddingTop="5dp"
+            android:layout_marginBottom="12dp"
+            />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:maxHeight="200dp"
+            android:id="@+id/ivMedia"
+            android:background="#bbdefb"
+            android:adjustViewBounds="true"
             />
     </LinearLayout>
 
@@ -50,6 +59,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>
+
+
 
 
     <LinearLayout
@@ -64,7 +75,8 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/etTweetReply"/>
+            android:id="@+id/etTweetReply"
+            android:textSize="14sp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -92,10 +104,6 @@
 
         </LinearLayout>
     </LinearLayout>
-
-
-
-
 
 
 </RelativeLayout>

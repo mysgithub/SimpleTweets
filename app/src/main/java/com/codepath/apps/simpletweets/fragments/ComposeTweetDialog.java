@@ -17,9 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.codepath.apps.simpletweets.interfaces.OnTweetPostListener;
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.TwitterApplication;
+import com.codepath.apps.simpletweets.interfaces.OnTweetPostListener;
 import com.codepath.apps.simpletweets.models.Profile;
 import com.codepath.apps.simpletweets.models.Tweet;
 import com.codepath.apps.simpletweets.network.TwitterClient;
@@ -107,7 +107,8 @@ public class ComposeTweetDialog extends DialogFragment {
   }
 
   public void setProfileData(){
-    Picasso.with(getContext()).load(profile.getProfileImageUrl()).into(ivProfileImage);
+
+    Picasso.with(getContext()).load(profile.getProfileImageUrl()).transform(TwitterUtil.roundedCornerTransformation).into(ivProfileImage);
     tvName.setText(profile.getName());
     tvScreenName.setText("@" + profile.getScreenName());
   }
