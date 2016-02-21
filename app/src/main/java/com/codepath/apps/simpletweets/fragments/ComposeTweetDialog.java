@@ -147,6 +147,7 @@ public class ComposeTweetDialog extends DialogFragment {
 
     @Override
     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+      Log.d("ERROR", "Unable to Reply Post - " + responseString);
       Toast.makeText(getContext(), "Unable to connect to twitter.com", Toast.LENGTH_SHORT).show();
     }
   };

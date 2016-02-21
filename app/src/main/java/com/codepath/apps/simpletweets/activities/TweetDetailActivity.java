@@ -19,9 +19,12 @@ import com.bumptech.glide.Glide;
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.TwitterApplication;
 import com.codepath.apps.simpletweets.models.Tweet;
+import com.codepath.apps.simpletweets.models.User;
+import com.codepath.apps.simpletweets.models.gson.TweetPostResponse;
 import com.codepath.apps.simpletweets.network.TwitterClient;
 import com.codepath.apps.simpletweets.utils.TwitterUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -181,17 +184,29 @@ public class TweetDetailActivity extends AppCompatActivity {
     public void afterTextChanged(Editable s) { }
   };
 
-  private final JsonHttpResponseHandler postResponseHandler = new JsonHttpResponseHandler(){
+  private final TextHttpResponseHandler postResponseHandler = new TextHttpResponseHandler(){
     @Override
     public void onStart() {
       Log.d("DEBUG", "POST Request: " + super.getRequestURI().toString());
     }
 
     @Override
-    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-      Log.d("DEBUG", "POST Resposne: " + response.toString());
-      Tweet tweet = new Tweet(response);
-      tweet.save();
+    public void onSuccess(int statusCode, Header[] headers, String responseString) {
+      Log.d("DEBUG", "POST Resposne: " + responseString);
+      TweetPostResponse tweetPostResponse = TweetPostResponse.parseJSON(responseString);
+      User user = new User();
+      user.setUid(tweetPostResponse.getUser().getId());
+      user.setName(tweetPostResponse.getUser().getName());
+      user.setScreenName(tweetPostResponse.getUser().getScreenName());
+      user.setProfileImageUrl(tweetPostResponse.getUser().getProfileImageUrl());
+      user.save(); // save in db
+      Tweet tweet = new Tweet();
+      tweet.setBody(tweetPostResponse.getText());
+      tweet.setUid(tweetPostResponse.getId());
+      tweet.setCreatedAt(TwitterUtil.getDateFromString(tweetPostResponse.getCreatedAt()));
+      tweet.setUser(user);
+      tweet.save(); // save in db
+
       // Clean Edit Text and Hide Button
       etTweetReply.setText("");
       linearLayoutTweetButton.setVisibility(View.GONE);
@@ -200,11 +215,11 @@ public class TweetDetailActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-      Log.d("ERROR", "Unable to Reply Post - " + errorResponse.toString());
-      // Show Toast
+    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+      Log.d("ERROR", "Unable to Reply Post - " + responseString);
       Toast.makeText(TweetDetailActivity.this, "Sorry!! Unable to reply tweet at this time!", Toast.LENGTH_LONG).show();
     }
+
   };
 }
 
